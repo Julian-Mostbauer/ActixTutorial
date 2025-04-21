@@ -1,5 +1,4 @@
-use crate::UserDb;
-use crate::{User, UserInputData};
+use crate::models::{UserDb, User, UserInputData};
 use actix_web::{get, post, web, Error, HttpResponse, Responder};
 
 #[get("/")]
@@ -31,4 +30,8 @@ async fn get_user(id: web::Path<u32>, db: web::Data<UserDb>) -> Result<impl Resp
         Some(user) => Ok(HttpResponse::Ok().json(user)),
         None => Err(actix_web::error::ErrorNotFound("User not found")),
     }
+}
+
+pub fn config(cfg: &mut web::ServiceConfig) {
+    cfg.service(index).service(create_user).service(get_user);
 }
